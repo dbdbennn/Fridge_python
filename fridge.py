@@ -91,7 +91,6 @@ def inputFridge():
     dateandant[1] = input("\t갯수는? > ")
     fridge[name] = dateandant
 
-    print(fridge)
     with open('fridge_dict.pkl', 'wb') as f:
         pickle.dump(fridge, f)
 
@@ -130,5 +129,6 @@ def exitFridge():
         main()
     else:
         exit()
-        
+
+
 main()
