@@ -1,6 +1,8 @@
 from datetime import datetime
 import pickle
 from tabulate import tabulate
+import strChanger as sc
+import date_calculate as dc
 
 
 # 리포지토리 keepgo로 바뀐지 확인
@@ -10,7 +12,7 @@ from tabulate import tabulate
 # with open('fridge.pkl', 'wb') as f:
 #     pickle.dump(fridge, f)
 
-print('\033[92m'+"""
+print(sc.str_Green("""
 
 *___   _  _______  _______  _______    _______  _______
 |   | | ||       ||       ||       |  |       ||       |
@@ -20,19 +22,9 @@ print('\033[92m'+"""
 |    _  ||   |___ |   |___ |   |      |   |_| ||       |
 |___| |_||_______||_______||___|      |_______||_______| *
 
-        """+'\033[0m')
+        """))
 
 # http://patorjk.com/
-
-
-def str_Red(text):
-    return '\033[92m'+text+'\033[0m'
-
-
-def backtomenu():
-    print()
-    print("\t\t 메뉴로 돌아갑니다 ⬇️")
-    print()
 
 
 def main():
@@ -52,26 +44,30 @@ def main():
     print()
     # 메뉴창 출력 끝
 
+    # 메뉴 선택 창
     menu = input("\t\t메뉴 선택 > ")
-    if (menu == "1"):
+    if menu == "1":
         printFridge()
-    elif (menu == "2"):
+    elif menu == "2":
         inputFridge()
-    elif (menu == "3"):
+    elif menu == "3":
         deleteFridge()
-    elif (menu == "4"):
+    elif menu == "4":
         exitFridge()
-    else:
-        while (menu != "1" and menu != "2" and menu != "3" and menu != "4"):
+    else:  # 다른 수(str형태)가 입력됐을 때 while문을 돌린다.
+        while (menu != "1"
+               and menu != "2"
+               and menu != "3"
+               and menu != "4"):
             print()
             menu = input("\t다시 선택해주세요 > ")
-            if (menu == "1"):
+            if menu == "1":
                 printFridge()
-            elif (menu == "2"):
+            elif menu == "2":
                 inputFridge()
-            elif (menu == "3"):
+            elif menu == "3":
                 deleteFridge()
-            elif (menu == "4"):
+            elif menu == "4":
                 exitFridge()
 
 
@@ -81,30 +77,45 @@ def printFridge():
 
     with open('fridge.pkl', "rb") as fr:
         fridge = pickle.load(fr)
-    print("냉장고 속 음식 보기 * 🍅 * 🥕 * 🥬 * 🥩 * 🥚 * 🍇 * 🥔")
+    print(sc.str_Yellow("냉장고 속 음식 보기 * 🍅 * 🥕 * 🥬 * 🥩 * 🥚 * 🍇 * 🥔"))
     print()
 
     if len(fridge) == 0:
-        print(str_Red("\t\t  ❗ 음식이 없어요"))
+        print(sc.str_Red("\t\t  ❗ 음식이 없어요"))
         backtomenu()
         main()
 
     # tabulate로 출력 시도.
     # 이 순간에만 fridge_dict로 따로 딕셔너리 만들어서 출력해볼 예정
-    ant_list = list()
-    num_list = list()
+
+    # 갯수 리스트
+    amount_list = list()
+    # 유통기한 리스트
+    date_list = list()
+    # 남은 기한 리스트
+    left_date_list = list()
+    list_temp = list()
 
     for i in range(0, len(fridge)):
-        ant_list.append(list((list(fridge.values()))[i])[0])
+        date_list.append(list(list(fridge.values())[i])[0])
 
     for i in range(0, len(fridge)):
-        num_list.append(list((list(fridge.values()))[i])[1])
+        amount_list.append(list(list(fridge.values())[i])[1])
+
+    for i in range(0, len(fridge)):
+        list_temp.append(list(list(fridge.values())[i])[0])
+
+    for i in range(0, len(fridge)):
+        left_date_list.append(dc.ca(list_temp[i]))
+
+    print(left_date_list)
 
     fridge_dict = {"이름": list(fridge.keys()),
-                   "유통기한": ant_list,
-                   "갯수": num_list}
+                   "갯수": amount_list,
+                   "유통기한": date_list,
+                   "남은 기한": left_date_list}
 
-    headers = ["이름", "유통기한", "갯수"]
+    headers = ["이름", "갯수", "유통기한", "남은 기한"]
     print(tabulate(fridge_dict, stralign="center",
           tablefmt='fancy_grid', headers=headers))
     backtomenu()
@@ -117,12 +128,12 @@ def inputFridge():
     with open('fridge.pkl', "rb") as fr:
         fridge = pickle.load(fr)
 
-    print("\t "+"- "*9+"냉장고 속 음식 추가"+"- "*9)
-    name = input("\t\t  무슨 음식인가요? > ")
-    dateandant = ["name", 0]
-    dateandant[0] = input("\t\t  유통기한은요? (YYYY-MM-DD) > ")
-    dateandant[1] = input("\t\t  갯수는요? > ")
-    fridge[name] = dateandant
+    print(sc.str_Magenta("냉장고 속 음식 추가 + 🍅 + 🥕 + 🥬 + 🥩 + 🥚 + 🍇 + 🥔"))
+    name = input("\n\t  무슨 음식인가요? > ")
+    date_and_amount = ["name", 0]
+    date_and_amount[0] = input("\t  유통기한은요? (YYYY-MM-DD) > ")
+    date_and_amount[1] = input("\t  갯수는요? > ")
+    fridge[name] = date_and_amount
 
     with open('fridge.pkl', 'wb') as f:
         pickle.dump(fridge, f)
@@ -135,7 +146,7 @@ def deleteFridge():
         fridge = pickle.load(fr)
 
     print()
-    print("냉장고 속 음식 삭제 - 🍅 - 🥕 - 🥬 - 🥩 - 🥚 - 🍇 - 🥔")
+    print(sc.str_Cyan("냉장고 속 음식 삭제 - 🍅 - 🥕 - 🥬 - 🥩 - 🥚 - 🍇 - 🥔"))
     if len(fridge) == 0:
         print("\n\t  ❗ 음식이 없어 삭제할 수 없습니다.")
         backtomenu()
@@ -158,16 +169,22 @@ def deleteFridge():
 
 def exitFridge():
     print()
-    isExit = input("""
-    \t\t정말 keep Go를 나가시겠습니까?
+    isExit = input(sc.str_Green("""
+    \t정말 keep Go를 나가시겠습니까?
 
-   \t\t나가시겠다면 아무 키를,
-   \t\t메뉴로 돌아가려면 1을 입력하세요 > """)
+   \t나가시겠다면 아무 키를,
+   \t메뉴로 돌아가려면 1을 입력하세요 > """))
     if isExit == "1":
         backtomenu()
         main()
     else:
         exit()
+
+
+def backtomenu():
+    print()
+    print("\t\t 메뉴로 돌아갑니다 ⬇️")
+    print()
 
 
 main()
