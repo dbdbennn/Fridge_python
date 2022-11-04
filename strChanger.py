@@ -16,3 +16,11 @@ def str_Magenta(text):
 
 def str_Cyan(text):
     return '\033[96m'+text+'\033[0m'
+
+
+def str_Orange(text):
+    return '\033[91m'+text+'\033[0m'
+
+
+def str_BYellow(text):
+    return '\033[93m'+text+'\033[0m'
