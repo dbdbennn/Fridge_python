@@ -24,7 +24,7 @@ def ca(input_date):
         return sc.str_Orange("오늘까지에요!")
 
     if input_date < today:
-        return sc.str_Red(date_gap+"일 지났습니다 🤢")
+        return sc.str_Red(date_gap+"일 지났어요 🤢")
 
     # 정수로 변경하여 비교
     date_gap = int(date_gap)
@@ -36,8 +36,6 @@ def ca(input_date):
     elif date_gap >= 30:
         return sc.str_Cyan("한 달 넘게 남았어요 😊")
     else:
-        return sc.str_Yellow(str(date_gap)+"일 남았어요.")
+        return sc.str_Yellow(str(date_gap)+"일 남았어요 🤔")
 
-
-# print(today)
 # print(ca(today))

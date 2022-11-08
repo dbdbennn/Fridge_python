@@ -1,6 +1,7 @@
 from datetime import datetime
-import pickle
-from tabulate import tabulate
+import pickle  # 객체 저장 파일 생성
+from tabulate import tabulate  # 표 작성
+# 내가 만든 모듈
 import strChanger as sc
 import date_calculate as dc
 import isDate as id
@@ -124,7 +125,7 @@ def printFridge():
 
     headers = ["이름", "갯수", "유통기한", "남은 기한"]
     print(tabulate(fridge_dict, stralign="center",
-          tablefmt='fancy_grid', headers=headers))
+          tablefmt='rounded_grid', headers=headers))
     backtomenu()
 
 
@@ -143,7 +144,7 @@ def inputFridge():
     date_and_amount[0] = input("\n\t  갯수는요? > ")
     # 숫자인지 판별
     while (date_and_amount[0].isdigit() == False):
-        print('\033[31m' + '\n\t❗ 숫자만 입력해주세요.' + '\033[0m')
+        print(sc.str_Red('\n\t❗ 숫자만 입력해주세요.'))
         date_and_amount[0] = input("\n\t  갯수는요? > ")
 
     # 유통기한 입력
@@ -156,7 +157,8 @@ def inputFridge():
     with open('fridge.pkl', 'wb') as f:
         pickle.dump(fridge, f)
 
-    print("\n\t\t"+'\033[94m'+name+'\033[0m'+"을(를) 넣었습니다!")
+    print("\n\t\t"+sc.str_Blue(name)+"을(를) 넣었습니다!")
+
     backtomenu()
 
 
@@ -173,11 +175,11 @@ def deleteFridge():
     name = input("\n\t\t꺼낼 음식은? > ")
 
     while name not in fridge:
-        print('\033[31m' + '\n\t\t❗ 입력한 음식이 없습니다.' + '\033[0m')
+        print(sc.str_Red("\n\t\t❗ 입력한 음식이 없습니다."))
         name = input("\n\t\t꺼낼 음식은? > ")
 
     del fridge[name]
-    print("\n\t\t"+'\033[94m'+name+'\033[0m'+"을(를) 꺼냈습니다!")
+    print("\n\t\t"+sc.str_Blue(name)+"을(를) 꺼냈습니다!")
 
     with open('fridge.pkl', 'wb') as f:
         pickle.dump(fridge, f)
@@ -198,10 +200,16 @@ def setFridge():
         print('\033[31m' + '\n\t\t❗ 입력한 음식이 없습니다.' + '\033[0m')
         name = input("\n\t수정할 음식은? > ")
 
-    set_list = [['음식 이름은 1️ ', '음식 갯수는 2️ ', '유통기한은 3️ ']]
-    print(tabulate(set_list, stralign="center",
-          tablefmt='fancy_grid'))
+    set_list = [['음식 이름은 "1️" ', '음식 갯수는 "2️" ', '유통기한은 "3️" ']]
+    print("\n"+tabulate(set_list, stralign="center",
+          tablefmt='rounded_grid'))
     menu = input("\n\t무엇을 수정하시겠어요? > ")
+    while (menu != "1"
+           and menu != "2"
+           and menu != "3"):
+        print()
+        menu = input("\t다시 선택해주세요 > ")
+
     if menu == "1":
         new_name = input("\n\t무슨 음식인가요? > ")
         fridge[new_name] = fridge.pop(name)
@@ -221,7 +229,7 @@ def setFridge():
     with open('fridge.pkl', 'wb') as f:
         pickle.dump(fridge, f)
 
-    print("\n\t\t"+'\033[94m'+name+'\033[0m'+"을(를) 수정했습니다!")
+    print("\n\t\t"+sc.str_Blue(name)+"을(를) 수정했습니다!")
 
     backtomenu()
 

@@ -24,3 +24,7 @@ def str_Orange(text):
 
 def str_BYellow(text):
     return '\033[93m'+text+'\033[0m'
+
+def str_Blue(text):
+    return '\033[94m'+text+'\033[0m'
+    
