@@ -249,9 +249,9 @@ def exitFridge():
 
 def backtomenu():
     print()
-    print("\t\t 메뉴로 돌아갑니다 ⬇️")
-    print()
-    main()
+    inputMeun = input("\t 엔터를 누르면 메뉴로 돌아갑니다 ⬇️  ")
+    if(str(type(inputMeun)) == "<class 'str'>") :
+        main()
 
 
 main()
