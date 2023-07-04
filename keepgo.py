@@ -1,3 +1,20 @@
+import subprocess
+
+# 필요한 모듈 리스트
+required_modules = ["datetime", "pickle", "tabulate", "strChanger", "date_calculate", "isDate"]
+
+# 모듈 설치 함수
+def install_module(module):
+    subprocess.check_call(["pip", "install", module])
+
+# 필요한 모듈 설치
+for module in required_modules:
+    try:
+        __import__(module)
+    except ImportError:
+        print(f"Installing {module} module...")
+        install_module(module)
+
 from datetime import datetime
 import pickle  # 객체 저장 파일 생성
 from tabulate import tabulate  # 표 작성
@@ -163,6 +180,58 @@ def inputFridge():
 
 
 def deleteFridge():
+    with open("fridge.pkl", "rb") as fr:
+        fridge = pickle.load(fr)
+
+    print()
+    print(sc.str_Cyan("냉장고에서 음식 꺼내기 - 🍅 - 🥕 - 🥬 - 🥩 - 🥚 - 🍇 - 🥔 - 🍠"))
+    if len(fridge) == 0:
+        print("\n\t  ❗ 음식이 없어 꺼낼 수 없습니다.")
+        backtomenu()
+
+    name = input("\n\t\t꺼낼 음식은? > ")
+    while name not in fridge:
+        print(sc.str_Red("\n\t\t❗ 입력한 음식이 없습니다."))
+        name = input("\n\t\t꺼낼 음식은? > ")
+
+    amount = int(input("\n\t\t꺼낼 음식의 갯수는? > "))
+    while amount <= 0 or amount > int(fridge[name][0]):
+        print(sc.str_Red("\n\t\t❗ 입력한 음식의 갯수가 올바르지 않습니다."))
+        amount = int(input("\n\t\t꺼낼 음식의 갯수는? > "))
+
+    fridge[name][0] = str(int(fridge[name][0]) - amount)
+    if fridge[name][0] == "0":
+        del fridge[name]
+        print("\n\t\t" + sc.str_Blue(name) + "을(를) 모두 꺼냈습니다!")
+    else:
+        print("\n\t\t" + sc.str_Blue(name) + "을(를) " + str(amount) + "개 꺼냈습니다!")
+
+    with open("fridge.pkl", "wb") as f:
+        pickle.dump(fridge, f)
+
+    backtomenu()
+    with open("fridge.pkl", "rb") as fr:
+        fridge = pickle.load(fr)
+
+    print()
+    print(sc.str_Cyan("냉장고에서 음식 꺼내기 - 🍅 - 🥕 - 🥬 - 🥩 - 🥚 - 🍇 - 🥔 - 🍠"))
+    if len(fridge) == 0:
+        print("\n\t  ❗ 음식이 없어 꺼낼 수 없습니다.")
+        backtomenu()
+
+    name = input("\n\t\t꺼낼 음식은? > ")
+
+    while name not in fridge:
+        print(sc.str_Red("\n\t\t❗ 입력한 음식이 없습니다."))
+        name = input("\n\t\t꺼낼 음식은? > ")
+
+    del fridge[name]
+    print("\n\t\t" + sc.str_Blue(name) + "을(를) 꺼냈습니다!")
+
+    with open("fridge.pkl", "wb") as f:
+        pickle.dump(fridge, f)
+    backtomenu()
+
     with open('fridge.pkl', "rb") as fr:
         fridge = pickle.load(fr)
 
