@@ -1,7 +1,6 @@
 import subprocess
 
 
-
 # 모듈 설치 함수
 def install_module(module):
     subprocess.check_call(["pip", "install", module])

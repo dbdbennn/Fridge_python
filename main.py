@@ -1,3 +1,31 @@
+import subprocess
+import cx_Oracle
+from tabulate import tabulate
+from datetime import datetime  # datetime 모듈 추가
+
+# 모듈 설치 함수
+def install_module(module):
+    subprocess.check_call(["pip", "install", module])
+
+# 필요한 모듈들 목록
+required_modules = ['cx_Oracle', 'tabulate']  # 필요한 모듈들 추가
+
+# 필요한 모듈 설치
+for module in required_modules:
+    try:
+        __import__(module)
+    except ImportError:
+        print(f"Installing {module} module...")
+        install_module(module)
+
+from datetime import datetime
+from tabulate import tabulate  # 표 작성
+# 내가 만든 모듈
+import strChanger as sc
+import date_calculate as dc
+import isDate as id
+tabulate.WIDE_CHARS_MODE = False
+
 import cx_Oracle
 
 # 연결 정보
@@ -67,10 +95,16 @@ new_cursor.execute(select_data_query)
 selected_data = new_cursor.fetchall()
 
 # 선택된 데이터 출력
+table_data = []
 for row in selected_data:
     food_name, expiration_date, food_pieces = row
-    print(f"Food Name: {food_name}, Expiration Date: {expiration_date}, Food Pieces: {food_pieces}")
+    # datetime 객체를 날짜 형식으로 변환하여 추가
+    formatted_date = expiration_date.date()  # 날짜 부분만 추출
+    table_data.append([food_name, formatted_date, food_pieces])
 
+table_headers = ["Food Name", "Expiration Date", "Food Pieces"]
+table = tabulate(table_data, headers=table_headers, tablefmt="rounded_grid", stralign="center")
+print(table)
 
 new_cursor.close()
 new_connection.close()
