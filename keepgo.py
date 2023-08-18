@@ -1,7 +1,6 @@
 import subprocess
 
-# 필요한 모듈 리스트
-required_modules = ["datetime", "pickle", "tabulate", "strChanger", "date_calculate", "isDate"]
+
 
 # 모듈 설치 함수
 def install_module(module):
