@@ -86,6 +86,10 @@ if table_count == 0:
 else:
     print("Table 'Fridge' already exists.")
 
+
+####################################################
+#printFridge
+
 select_data_query = """
     SELECT *
     FROM Fridge
